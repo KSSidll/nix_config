@@ -47,9 +47,11 @@ alias ls='ls --color'
 alias ll='ls -la --color'
 alias c='clear'
 alias enix='cd ~/.config/nix; $EDITOR .'
-alias nix-rebuild-flake='sudo nixos-rebuild switch --flake ~/.config/nix/.#mainpc'
 alias nix-update-flake='sudo nix flake update ~/.config/nix'
-alias nix-update-os='nix-update-flake; nix-rebuild-flake'
+alias nix-rebuild-flake-pc='sudo nixos-rebuild switch --flake ~/.config/nix/.#mainpc --impure'
+alias nix-rebuild-flake-laptop='sudo nixos-rebuild switch --flake ~/.config/nix/.#laptop --impure'
+alias nix-update-os-pc='nix-update-flake; nix-rebuild-flake-pc'
+alias nix-update-os-laptop='nix-update-flake; nix-rebuild-flake-laptop'
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"

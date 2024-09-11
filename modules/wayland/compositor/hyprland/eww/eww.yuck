@@ -1,4 +1,4 @@
-(defvar workspace_size 30)
+(defvar workspace_size 20)
 
 (defwindow topbar
     :monitor 0
@@ -8,6 +8,7 @@
     :namespace "topbar"
     :geometry (geometry
         :width "100%"
+        :height 40
         :anchor "top center")
     (topbar_layout))
 
@@ -15,13 +16,13 @@
     :initial '{"day":"0","month":"0","year":"0","hour":"0","min":"0", "sec":"0"}'
     `date +'{"day":"%d","month":"%m","year":"%Y","hour":"%H","min":"%M", "sec":"%S"}'`)
 
-(deflisten hyprland_workspaces 
+(deflisten hyprland_workspaces
     :initial "[]"
-    `~/.config/eww/scripts/hyprland-listen-workspaces.sh`)
+    `sh ~/.config/eww/scripts/hyprland-listen-workspaces.sh`)
 
 (deflisten hyprland_active_workspace
     :initial '{"id": 1}'
-    `~/.config/eww/scripts/hyprland-listen-active-workspace.sh`)
+    `sh ~/.config/eww/scripts/hyprland-listen-active-workspace.sh`)
 
 (defwidget time_widget []
     (box :class "time"
@@ -47,7 +48,7 @@
     (box :class "workspace-layout-box"
         :orientation "horizontal"
         (for workspace in hyprland_workspaces
-            (workspace_widget 
+            (workspace_widget
                 :active {workspace.id == hyprland_active_workspace.id}))))
 
 (defwidget spacer [?width ?height]
@@ -61,9 +62,7 @@
     (box :class "topbar-layout-left-box"
         :orientation "horizontal"
         :space-evenly false
-        (spacer :width 5)
-        "${hyprland_active_workspace.id}"
-        (spacer :width 5)
+        (label :width 5 :style "opacity: 0;" :text "${hyprland_active_workspace.id}")
         (workspace_layout_widget)
     ))
 
@@ -79,14 +78,12 @@
         :space-evenly false
         (spacer)
         (datetime_layout)
-        (spacer :width 5)
-        (button :onclick "eww close topbar")
+        (spacer :width 15)
     ))
 
 (defwidget topbar_layout []
     (centerbox :class "topbar-layout-box"
         :orientation "horizontal"
-        :space-evenly false
         (topbar_layout_start)
         (topbar_layout_center)
         (topbar_layout_end)))

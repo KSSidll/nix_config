@@ -1,9 +1,36 @@
+$workspace-color: #b4befe;
+$workspace-background-transition-duration: 150ms;
+
+* {
+  all: unset;
+}
+
+@keyframes workspace-fill-background {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: $workspace-color;
+  }
+}
+
+.topbar-layout-box {
+  background-color: #1e1e2e;
+}
+
 .workspace {
-    border: 1px solid white;
-    border-radius: 100%;
-    margin: 3px;
+  border: 1px solid $workspace-color;
+  border-radius: 50%;
+  margin: 4px;
+  transition: background-color $workspace-background-transition-duration ease-in;
+  background-color: transparent;
 }
 
 .workspace-active {
-    border-color: red;
+  animation: workspace-fill-background $workspace-background-transition-duration
+    ease-in forwards;
+}
+
+.datetime-layout-box {
+  font-size: 12px;
 }

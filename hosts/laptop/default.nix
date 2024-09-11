@@ -8,6 +8,7 @@
     ../../modules/editor/neovim
     ../../modules/shell/zsh
     ../../modules/browser/firefox
+    ../../modules/keyboard/kanata
   ];
 
   environment = {

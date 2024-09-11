@@ -1,24 +1,47 @@
 { pkgs, inputs, vars, ... }:
 {
   boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5;
+      };
+
+      efi = {
+        canTouchEfiVariables = true;
+      };
+
+      timeout = 2;
+    };
+
     tmp = {
       cleanOnBoot = true;
       tmpfsSize = "5GB";
     };
   };
 
-
   users.users.${vars.user} = {
     isNormalUser = true;
     extraGroups = [
       "wheel" # sudo
       "input" # for input access
+      "uinput" # for input access
       "libvirtd" # virtualisation
       "kvm" # virtualisation
       "networkmanager" # networking
     ];
   };
 
+  # Syncthing
+  services.syncthing = {
+    enable = true;
+
+    user = vars.user;
+    dataDir = "/home/" + vars.user;
+    openDefaultPorts = true;
+  };
+
+  # Virtualisation
   virtualisation.kvmgt.enable = true;
   virtualisation.libvirtd = {
     enable = true;
@@ -40,7 +63,7 @@
     };
   };
 
-
+  # Timezone
   time.timeZone = "Europe/Warsaw";
 
   # Locale
@@ -70,12 +93,12 @@
   networking = {
     networkmanager = {
       enable = true;
-      
+
       plugins = with pkgs; [
         gnome.networkmanager-openvpn
       ];
     };
-    
+
     firewall = {
       enable = true;
 
@@ -111,6 +134,7 @@
       qpwgraph # Pipewire Graph Manager
       zip
       unzip
+      localsend # Send files and data locally
     ];
   };
 
@@ -148,12 +172,12 @@
   };
 
   system = {
-    stateVersion = "23.11";
+    stateVersion = "24.05";
   };
 
   home-manager.users.${vars.user} = {
     home = {
-      stateVersion = "23.11";
+      stateVersion = "24.05";
     };
 
     programs = {

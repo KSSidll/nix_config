@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
@@ -11,17 +10,16 @@
     };
   };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, home-manager, ... }: 
-  let 
+  outputs = inputs @ { self, nixpkgs, home-manager, ... }:
+  let
     vars = {
       user = "sidll";
-      location = "$HOME/.config/nix";
     };
   in {
     nixosConfigurations = (
       import ./hosts {
         inherit (nixpkgs) lib;
-	inherit inputs nixpkgs nixpkgs-unstable home-manager vars;
+        inherit inputs nixpkgs home-manager vars;
       }
     );
   };

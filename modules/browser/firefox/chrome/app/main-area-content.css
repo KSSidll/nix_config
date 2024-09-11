@@ -1,0 +1,73 @@
+#appcontent .browserStack,
+#browser,
+.browserContainer {
+  background: var(--bg-color);
+}
+
+#browser > #appcontent {
+  margin-left: var(--content-area-left-offset);
+  margin-top: var(--content-area-top-offset);
+
+  padding-left: var(--content-area-left-padding);
+  padding-top: var(--content-area-top-padding);
+  padding-right: var(--content-area-right-padding);
+  padding-bottom: var(--content-area-bottom-padding);
+
+  transition: var(--transition) !important;
+}
+
+#main-window {
+  #appcontent .browserStack::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--content-area-rounding) !important;
+    border: var(--content-area-border);
+    box-shadow: 0 0 0 100px var(--bg-color) !important;
+    clip-path: inset(0);
+    pointer-events: none;
+  }
+}
+
+/* CUSTOMIZATION MENU */
+
+#main-window[customizing] {
+  #customization-palette-container {
+    padding-top: calc(
+      var(--content-area-top-offset) + var(--content-area-top-padding)
+    );
+
+    padding-left: calc(
+      var(--content-area-left-offset) + var(--content-area-left-padding)
+    );
+  }
+
+  #customization-panelWrapper {
+    padding-top: calc(
+      var(--content-area-top-offset) + var(--content-area-top-padding)
+    );
+
+    padding-right: var(--content-area-right-padding);
+  }
+
+  .panel-arrowbox {
+    opacity: 0 !important;
+  }
+
+  .panel-arrowcontent {
+    border-radius: var(--rounding-md) !important;
+  }
+
+  #customization-footer {
+    position: fixed !important;
+
+    bottom: var(--content-area-bottom-padding);
+    right: var(--content-area-right-padding);
+    left: calc(
+      var(--content-area-left-offset) + var(--content-area-left-padding)
+    );
+
+    background-color: var(--bg-col) !important;
+    border-radius: var(--rounding-md) !important;
+  }
+}

@@ -1,0 +1,29 @@
+@-moz-document regexp("^moz-extension://.*?/sidebar/sidebar.html")
+{
+  #root.root {
+    --general-border-radius: var(--rounding-sm) !important;
+    --general-margin: 6px !important;
+
+    --button-size: 33.5px;
+    --pin-favicon-size: 30px;
+
+    --nav-btn-margin: calc(var(--margin) / 2) !important;
+    --nav-btn-width: var(--button-size) !important;
+    --nav-btn-height: var(--button-size) !important;
+    --nav-btn-len-margin: calc(var(--rounding-sm) / 4) !important;
+
+    --tabs-margin: calc(var(--margin) / 2) !important;
+    --tabs-height: var(--button-size) !important;
+    --tabs-inner-gap: calc(var(--margin) / 2) !important;
+    --tabs-border-radius: var(--rounding-md) !important;
+  }
+
+  /* consistent navbar background */
+  #nav_bar {
+    background-color: transparent !important;
+  }
+
+  .popup-container {
+    background-color: transparent !important;
+  }
+}

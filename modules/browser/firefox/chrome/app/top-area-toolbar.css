@@ -1,0 +1,54 @@
+/* tabs bar */
+#TabsToolbar-customization-target {
+  display: none !important;
+}
+
+/* navigation bar */
+#nav-bar {
+  position: fixed !important;
+  z-index: 3 !important;
+
+  transition: var(--transition) !important;
+
+  background-color: transparent !important;
+
+  padding-top: var(--titlebar-top-padding) !important;
+  left: var(--titlebar-left-offset) !important;
+  right: var(--titlebar-buttonbox-width) !important;
+
+  height: var(--titlebar-height) !important;
+}
+
+/* title bar controls box */
+.titlebar-buttonbox-container {
+  position: fixed !important;
+
+  z-index: 3 !important;
+
+  /* set position to right */
+  right: 0px;
+  padding-top: var(--titlebar-top-padding) !important;
+  height: var(--titlebar-height) !important;
+  width: var(--toolbar-buttonbox-width) !important;
+}
+
+/* bookmarks */
+#PersonalToolbar {
+  position: fixed;
+  z-index: 2 !important;
+  width: 100%;
+
+  top: var(--toolbar-bookmarksbar-top-offset);
+
+  height: var(--toolbar-bookmarksbar-height) !important;
+  background-color: transparent !important;
+}
+
+#urlbar:not(:is([breakout][breakout-extend], :focus-within)) {
+  height: 100% !important;
+
+  /* centered navbar text */
+  #urlbar-input {
+    text-align: center !important;
+  }
+}

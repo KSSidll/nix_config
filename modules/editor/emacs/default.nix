@@ -2,14 +2,13 @@
 {
   environment = {
     systemPackages = with pkgs; [
-      firefox
+      emacs
     ];
   };
 
   home-manager.users.${vars.user} = {
     home.file = {
-      ".mozilla/firefox/profiles.ini".source = ./profiles.ini;
-      ".mozilla/firefox/j9kexz06.arken/user.js".source = ./user.js;
+      ".emacs.d/init.el".source = ./emacs.d/init.el;
     };
   };
 }

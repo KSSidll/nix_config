@@ -32,6 +32,19 @@
     ];
   };
 
+  # SSH
+  services.openssh = {
+    enable = true;
+    ports = [ 22 ];
+    settings = {
+      PasswordAuthentication = true;
+      AllowUsers = null;
+      UseDns = true;
+      X11Forwarding = false;
+      PermitRootLogin = "prohibit-password";
+    };
+  };
+
   # Syncthing
   services.syncthing = {
     enable = true;
@@ -95,7 +108,7 @@
       enable = true;
 
       plugins = with pkgs; [
-        gnome.networkmanager-openvpn
+        networkmanager-openvpn
       ];
     };
 
@@ -108,6 +121,7 @@
 
       allowedTCPPorts = [
         53317
+        22
       ];
     };
   };
@@ -118,8 +132,8 @@
     systemPackages = with pkgs; [
       virtio-win # virtualisation
       spice-gtk # virtualisation
-      gnome.gnome-boxes # virtualisation
-      gnome.nautilus # file manager
+      gnome-boxes # virtualisation
+      nautilus # file manager
       # zed-editor # editor
       neovim # editor
       git
@@ -179,6 +193,12 @@
     home = {
       stateVersion = "24.05";
     };
+
+    imports = [
+      "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+    ];
+
+    services.vscode-server.enable = true;
 
     programs = {
       home-manager.enable = true;

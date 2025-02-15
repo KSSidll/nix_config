@@ -20,7 +20,7 @@
     nixosConfigurations = (
       import ./hosts {
         inherit (nixpkgs) lib;
-        inherit inputs nixpkgs home-manager vars;
+        inherit inputs nixpkgs nixpkgs-unstable home-manager vars;
       }
     );
   };

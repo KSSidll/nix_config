@@ -19,6 +19,7 @@
       android-studio
       vscode-fhs
       jetbrains.pycharm-community-src
+      tmux
     ];
   };
 }

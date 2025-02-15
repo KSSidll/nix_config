@@ -1,4 +1,4 @@
-{ pkgs, vars, ... }:
+{ pkgs, pkgs-unstable, vars, ... }:
 {
   imports = [
     ../../dunst
@@ -12,12 +12,6 @@
     xwayland.enable = true;
   };
 
-  # services.displayManager.sddm = {
-  #   enable = true;
-  #   wayland.enable = true;
-  #   theme = "catppuccin-mocha";
-  # };
-
   environment = {
     systemPackages = with pkgs; [
       # catppuccin-sddm
@@ -27,6 +21,11 @@
       eww
       wl-clipboard-rs
       jq # tool to work with json, used for widgets
+      pkgs-unstable.ags
+      pkgs-unstable.astal.io
+      pkgs-unstable.astal.gjs
+      pkgs-unstable.astal.astal4
+      pkgs-unstable.astal.hyprland
     ];
   };
 

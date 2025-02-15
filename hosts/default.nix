@@ -1,8 +1,13 @@
-{ inputs, nixpkgs, home-manager, vars, ... }:
+{ inputs, nixpkgs, nixpkgs-unstable, home-manager, vars, ... }:
 let
   system = "x86_64-linux";
 
   pkgs = import nixpkgs {
+    inherit system;
+    config.allowUnfree = true;
+  };
+
+  pkgs-unstable = import nixpkgs-unstable {
     inherit system;
     config.allowUnfree = true;
   };
@@ -12,7 +17,7 @@ in {
   mainpc = lib.nixosSystem {
     inherit system;
     specialArgs = {
-      inherit inputs system pkgs vars;
+      inherit inputs system pkgs pkgs-unstable vars;
       host = {
         hostName = "mainpc";
       };
@@ -32,7 +37,7 @@ in {
   laptop = lib.nixosSystem {
     inherit system;
     specialArgs = {
-      inherit inputs system pkgs vars;
+      inherit inputs system pkgs pkgs-unstable vars;
       host = {
         hostName = "laptop";
       };

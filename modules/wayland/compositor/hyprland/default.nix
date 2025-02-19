@@ -1,4 +1,16 @@
-{ pkgs, pkgs-unstable, vars, ... }:
+{ self, system, pkgs, pkgs-unstable, vars, ags, ... }:
+let
+  ags-system-overlay = ags.lib.bundle {
+    pkgs = pkgs-unstable;
+    src = ./ags;
+    name = "system-overlay";
+    entry = "app.ts";
+    gtk4 = true;
+    extraPackages = with ags.packages.${system}; [
+        hyprland
+    ];
+  };
+in
 {
   imports = [
     ../../dunst
@@ -21,11 +33,7 @@
       eww
       wl-clipboard-rs
       jq # tool to work with json, used for widgets
-      pkgs-unstable.ags
-      pkgs-unstable.astal.io
-      pkgs-unstable.astal.gjs
-      pkgs-unstable.astal.astal4
-      pkgs-unstable.astal.hyprland
+      ags-system-overlay
     ];
   };
 

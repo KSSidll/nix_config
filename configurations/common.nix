@@ -1,4 +1,4 @@
-{ pkgs, inputs, vars, ... }:
+{ pkgs, vars, ... }:
 {
   boot = {
     loader = {
@@ -149,6 +149,10 @@
       zip
       unzip
       localsend # Send files and data locally
+      vesktop # Vencord discord
+      obs-studio
+      android-studio
+      tmux
     ];
   };
 

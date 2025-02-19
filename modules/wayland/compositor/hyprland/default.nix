@@ -33,7 +33,8 @@ in
       eww
       wl-clipboard-rs
       jq # tool to work with json, used for widgets
-      ags-system-overlay
+    ] ++ [
+      ags-system-overlay # ags system overlay built from ./ags
     ];
   };
 

@@ -7,7 +7,17 @@ let
     entry = "app.ts";
     gtk4 = true;
     extraPackages = with ags.packages.${system}; [
-        hyprland
+      io
+      gjs
+      tray
+      apps
+      notifd
+      astal4
+      wireplumber
+      network
+      hyprland
+      bluetooth
+      battery
     ];
   };
 in
@@ -29,14 +39,19 @@ in
       # catppuccin-sddm
       hyprpaper
       hyprshot
-      # waybar
-      eww
       wl-clipboard-rs
-      jq # tool to work with json, used for widgets
     ] ++ [
       ags-system-overlay # ags system overlay built from ./ags
-    ];
+    ] ++ (with pkgs-unstable; [
+      astal.io
+      astal.battery
+      astal.hyprland
+      astal.notifd
+      ags
+    ]);
   };
+
+  services.upower.enable = true; # DBus service that provides power management support, used by ags-system-overlay
 
   programs.dconf.enable = true;
 
@@ -51,8 +66,6 @@ in
     home = {
       file = {
         ".config/hypr".source = ./hypr;
-        # ".config/waybar".source = ./waybar;
-        ".config/eww".source = ./eww;
       };
     };
   };

@@ -1,20 +1,43 @@
 // https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
 $fg-color: #{"@theme_fg_color"};
 $bg-color: #{"@theme_bg_color"};
+$workspace-color: #b4befe;
+$workspace-background-transition-duration: 150ms;
+
+* {
+  all: unset;
+}
 
 window.Bar {
-    background: transparent;
-    color: $fg-color;
-    font-weight: bold;
+  background: transparent;
+  color: $fg-color;
 
-    >centerbox {
-        background: $bg-color;
-        border-radius: 10px;
-        margin: 8px;
-    }
+  bar_overlay_box {
+    background: $bg-color;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
 
-    button {
-        border-radius: 8px;
-        margin: 2px;
-    }
+@keyframes workspace-fill-background {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: $workspace-color;
+  }
+}
+
+.workspace {
+  border: 1px solid $workspace-color;
+  border-radius: 50%;
+  margin: 4px;
+  transition: background-color $workspace-background-transition-duration ease-in;
+  background-color: transparent;
+}
+
+.workspace-active {
+  animation: workspace-fill-background $workspace-background-transition-duration ease-in forwards;
 }

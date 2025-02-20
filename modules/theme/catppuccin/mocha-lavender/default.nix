@@ -21,7 +21,7 @@
         };
         name = "catppuccin-mocha-lavender-standard";
       };
-      
+
       iconTheme = {
         package = pkgs.catppuccin-papirus-folders.override {
           flavor = "mocha";

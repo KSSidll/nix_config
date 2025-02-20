@@ -42,12 +42,11 @@ in
       wl-clipboard-rs
     ] ++ [
       ags-system-overlay # ags system overlay built from ./ags
-    ] ++ (with pkgs-unstable; [
-      astal.io
-      astal.battery
-      astal.hyprland
-      astal.notifd
-      ags
+    ] ++ (with ags.packages.${system}; [
+      io
+      battery
+      hyprland
+      notifd
     ]);
   };
 

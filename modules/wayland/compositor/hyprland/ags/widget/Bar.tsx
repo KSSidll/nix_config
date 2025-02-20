@@ -13,7 +13,6 @@ const hyprland = Hyprland.get_default()
 const hyprland_workspaces = bind(hyprland, "workspaces").as(it => it.sort((a, b) => a.id - b.id))
 const hyprland_active_workspace_id = bind(hyprland, "focused_workspace").as(it => it.id)
 
-
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -23,7 +22,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         cssClasses={["Bar"]}
         gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
-        anchor={TOP | LEFT | RIGHT}
+        anchor={LEFT | TOP | RIGHT}
         application={App}>
         <box
             cssName="bar_overlay_box"
@@ -41,8 +40,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                 (it.id == active_id) ? ["workspace", "workspace-active"] : ["workspace"]
                             )
                         }
-                        width_request={22}
-                        height_request={22}
+                        widthRequest={22}
+                        heightRequest={22}
                     />
                 )))}
             </box>
@@ -58,6 +57,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     >
                         <label label={time()} />
+                        <box heightRequest={1} />
                         <label label={date()} />
                     </box>
                     <popover>

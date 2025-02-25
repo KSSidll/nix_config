@@ -18,7 +18,9 @@ let
       hyprland
       bluetooth
       battery
-    ];
+    ] ++ (with pkgs; [
+      rubik # font for system overlay
+    ]);
   };
 in
 {

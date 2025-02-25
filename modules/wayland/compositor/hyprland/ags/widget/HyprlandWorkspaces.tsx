@@ -14,20 +14,16 @@ export default function HyprlandWorkspaces() {
         {hyprland_workspaces.as(list => list.map(it => (
             <box>
                 <box widthRequest={2} />
-                <box vertical>
-                    <box vexpand />
-                    <button
-                        cssClasses={
-                            hyprland_active_workspace_id.as(active_id =>
-                                (it.id == active_id) ? ["workspace", "workspace-active"] : ["workspace"]
-                            )
-                        }
-                        widthRequest={13}
-                        heightRequest={13}
-                        onClicked={_ => it.focus()}
-                    />
-                    <box vexpand />
-                </box>
+                <button
+                    cssClasses={
+                        hyprland_active_workspace_id.as(active_id =>
+                            (it.id == active_id) ? ["workspace", "workspace-active"] : ["workspace"]
+                        )
+                    }
+                    widthRequest={13}
+                    heightRequest={13}
+                    onClicked={_ => it.focus()}
+                />
                 <box widthRequest={2} />
             </box>
         )))}

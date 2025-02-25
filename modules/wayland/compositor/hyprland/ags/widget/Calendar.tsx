@@ -11,7 +11,7 @@ export default function Calendar() {
     >
         <menubutton>
             <box
-                halign={Gtk.Align.CENTER}
+                valign={Gtk.Align.CENTER}
             >
                 <label label={time()} />
                 <box widthRequest={4} />

@@ -1,21 +1,22 @@
 import { Variable } from "astal"
 import { Gtk } from "astal/gtk4"
+import Dot from "./Dot"
 
-
-const time = Variable("").poll(1000, "date +%T")
-const date = Variable("").poll(1000, "date +%d.%m.%Y")
+const time = Variable("").poll(1000, "date +%H:%M")
+const date = Variable("").poll(1000, "date +%d/%m")
 
 export default function Calendar() {
     return <box
-        cssName="bar_overlay_calendar_box"
+        cssName="calendar_box"
     >
         <menubutton>
             <box
-                orientation={Gtk.Orientation.VERTICAL}
                 halign={Gtk.Align.CENTER}
             >
                 <label label={time()} />
-                <box heightRequest={1} />
+                <box widthRequest={4} />
+                <Dot />
+                <box widthRequest={4} />
                 <label label={date()} />
             </box>
             <popover>

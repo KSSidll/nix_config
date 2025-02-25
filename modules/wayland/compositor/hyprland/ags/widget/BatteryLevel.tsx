@@ -3,7 +3,7 @@ import { Gtk } from "astal/gtk4"
 import Battery from "gi://AstalBattery"
 
 const battery = Battery.get_default()
-const batteryPercentage = bind(battery, "percentage").as(it => it * 100)
+const batteryPercentage = bind(battery, "percentage").as(it => Math.round(it * 100))
 const batteryCharging = bind(battery, "charging")
 
 const batteryIconPath = Variable("")
@@ -34,20 +34,23 @@ export default function BatteryLevel() {
     updateBatteryIconPath()
 
     return <box
-        cssName="bar_overlay_battery_box"
-        valign={Gtk.Align.CENTER}
+        cssName="battery_box"
     >
-        <image
-            cssName="bar_overlay_battery_icon"
-            file={batteryIconPath()}
-            pixelSize={20}
-        />
+        <box
+            valign={Gtk.Align.CENTER}
+        >
+            <image
+                cssName="battery_icon"
+                file={batteryIconPath()}
+                pixelSize={16}
+            />
 
-        <box widthRequest={1} />
+            <box widthRequest={1} />
 
-        <label
-            cssName="bar_overlay_battery_label"
-            label={batteryPercentage.as(it => `${it}%`)}
-        />
+            <label
+                cssName="battery_label"
+                label={batteryPercentage.as(it => `${it}%`)}
+            />
+        </box>
     </box>
 }

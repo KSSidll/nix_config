@@ -1,4 +1,4 @@
-import { App, Astal, Gtk, Gdk } from "astal/gtk4"
+import { App, Astal, Gdk } from "astal/gtk4"
 import BatteryLevel from "./BatteryLevel"
 import HyprlandWorkspaces from "./HyprlandWorkspaces"
 import Calendar from "./Calendar"
@@ -20,9 +20,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         >
             <HyprlandWorkspaces />
             <box hexpand />
-            <BatteryLevel />
-            <box widthRequest={20} />
-            <Calendar />
+            <box cssName="pill">
+                <BatteryLevel />
+                <box widthRequest={12} />
+                <Calendar />
+            </box>
         </box>
     </window>
 }

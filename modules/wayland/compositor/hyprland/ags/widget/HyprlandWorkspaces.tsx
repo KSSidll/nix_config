@@ -8,20 +8,28 @@ const hyprland_active_workspace_id = bind(hyprland, "focused_workspace").as(it =
 
 export default function HyprlandWorkspaces() {
     return <box
-        cssName="bar_overlay_workspaces_box"
+        cssName="workspaces_box"
         valign={Gtk.Align.CENTER}
     >
         {hyprland_workspaces.as(list => list.map(it => (
-            <button
-                cssClasses={
-                    hyprland_active_workspace_id.as(active_id =>
-                        (it.id == active_id) ? ["workspace", "workspace-active"] : ["workspace"]
-                    )
-                }
-                widthRequest={22}
-                heightRequest={22}
-                onClicked={_ => it.focus()}
-            />
+            <box>
+                <box widthRequest={2} />
+                <box vertical>
+                    <box vexpand />
+                    <button
+                        cssClasses={
+                            hyprland_active_workspace_id.as(active_id =>
+                                (it.id == active_id) ? ["workspace", "workspace-active"] : ["workspace"]
+                            )
+                        }
+                        widthRequest={13}
+                        heightRequest={13}
+                        onClicked={_ => it.focus()}
+                    />
+                    <box vexpand />
+                </box>
+                <box widthRequest={2} />
+            </box>
         )))}
     </box>
 }

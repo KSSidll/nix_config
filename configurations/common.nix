@@ -101,6 +101,7 @@
     jetbrains-mono
     font-awesome
     noto-fonts
+    geist-font
   ];
 
   networking = {

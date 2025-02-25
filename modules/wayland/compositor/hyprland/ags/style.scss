@@ -12,7 +12,7 @@ $workspace-background-transition-duration: 150ms;
 window.Bar {
   background: transparent;
   color: $fg-color;
-  font-family: "Rubik", "Geist", "AR One Sans", "Reddit Sans", "Inter", "Roboto", "Ubuntu", "Noto Sans", sans-serif;
+  font-family: "Geist", "Noto Sans", sans-serif;
 
   bar_overlay_box {
     background: $bg-color;

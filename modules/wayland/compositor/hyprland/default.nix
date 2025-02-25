@@ -18,9 +18,7 @@ let
       hyprland
       bluetooth
       battery
-    ] ++ (with pkgs; [
-      rubik # font for system overlay
-    ]);
+    ];
   };
 in
 {
@@ -51,6 +49,10 @@ in
       notifd
     ]);
   };
+
+  fonts.packages = with pkgs; [ # fonts that system overlay uses
+    geist-font
+  ];
 
   services.upower.enable = true; # DBus service that provides power management support, used by ags-system-overlay
 

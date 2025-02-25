@@ -1,0 +1,53 @@
+import { bind, Variable } from "astal"
+import { Gtk } from "astal/gtk4"
+import Battery from "gi://AstalBattery"
+
+const battery = Battery.get_default()
+const batteryPercentage = bind(battery, "percentage").as(it => it * 100)
+const batteryCharging = bind(battery, "charging")
+
+const batteryIconPath = Variable("")
+batteryCharging.subscribe(_ => updateBatteryIconPath())
+batteryPercentage.subscribe(_ => updateBatteryIconPath())
+
+function updateBatteryIconPath() {
+    if (batteryCharging.get()) {
+        if (batteryPercentage.get() > 99) { batteryIconPath.set("assets/battery_full_charging.svg") }
+        else if (batteryPercentage.get() > 90) { batteryIconPath.set("assets/battery_90_charging.svg") }
+        else if (batteryPercentage.get() > 80) { batteryIconPath.set("assets/battery_80_charging.svg") }
+        else if (batteryPercentage.get() > 60) { batteryIconPath.set("assets/battery_60_charging.svg") }
+        else if (batteryPercentage.get() > 40) { batteryIconPath.set("assets/battery_40_charging.svg") }
+        else if (batteryPercentage.get() > 20) { batteryIconPath.set("assets/battery_20_charging.svg") }
+        else { batteryIconPath.set("assets/battery_00_charging.svg") }
+    } else {
+        if (batteryPercentage.get() > 99) { batteryIconPath.set("assets/battery_full.svg") }
+        else if (batteryPercentage.get() > 90) { batteryIconPath.set("assets/battery_90.svg") }
+        else if (batteryPercentage.get() > 80) { batteryIconPath.set("assets/battery_80.svg") }
+        else if (batteryPercentage.get() > 60) { batteryIconPath.set("assets/battery_60.svg") }
+        else if (batteryPercentage.get() > 40) { batteryIconPath.set("assets/battery_40.svg") }
+        else if (batteryPercentage.get() > 20) { batteryIconPath.set("assets/battery_20.svg") }
+        else { batteryIconPath.set("assets/battery_00.svg") }
+    }
+}
+
+export default function BatteryLevel() {
+    updateBatteryIconPath()
+
+    return <box
+        cssName="bar_overlay_battery_box"
+        valign={Gtk.Align.CENTER}
+    >
+        <image
+            cssName="bar_overlay_battery_icon"
+            file={batteryIconPath()}
+            pixelSize={20}
+        />
+
+        <box widthRequest={1} />
+
+        <label
+            cssName="bar_overlay_battery_label"
+            label={batteryPercentage.as(it => `${it}%`)}
+        />
+    </box>
+}

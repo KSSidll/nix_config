@@ -29,6 +29,8 @@ HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 
+export UV_PYTHON_DOWNLOADS=never
+
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space

@@ -15,7 +15,6 @@
   environment = {
     systemPackages = with pkgs; [
       vscode-fhs
-      jetbrains.pycharm-community-src
     ];
   };
 }

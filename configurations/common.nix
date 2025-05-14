@@ -135,7 +135,6 @@
       spice-gtk # virtualisation
       gnome-boxes # virtualisation
       nautilus # file manager
-      # zed-editor # editor
       neovim # editor
       git
       wget
@@ -153,7 +152,11 @@
       vesktop # Vencord discord
       obs-studio
       android-studio
+      jetbrains.pycharm-community-src
       tmux
+      python314
+      python39
+      uv # Python manager / resolver
     ];
   };
 

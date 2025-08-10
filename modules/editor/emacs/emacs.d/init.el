@@ -126,12 +126,13 @@
 
 ;;;; Evil modes for vim-motions
 (use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-Y-yank-to-eol t)
-  (setq evil-undo-system 'undo-tree)
+  :custom
+  (evil-vsplit-window-right t)
+  (evil-want-integration t)
+  (evil-want-keybinding nil)
+  (evil-want-C-u-scroll t)
+  (evil-want-Y-yank-to-eol t)
+  (evil-undo-system 'undo-tree)
   :config
   (evil-mode 1)
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
@@ -155,16 +156,19 @@
 ;; Make C-g return evil to normal state
 (general-define-key
   :states '(      insert operator replace)
+  :keymaps 'override
   "C-g" 'evil-normal-state)
 
 ;; Make C-c return evil to normal state
 (general-define-key
   :states '(emacs insert operator replace)
+  :keymaps 'override
   "C-c" 'evil-normal-state)
 
 ;; Comment on gc
 (general-define-key
   :states '(visual)
+  :keymaps 'override
   "gc" (cons "toggle comment" 'evilnc-comment-or-uncomment-lines))
 
 ;; Surround
@@ -225,6 +229,7 @@
 
 (general-define-key
   :states '(normal)
+  :keymaps 'override
   "/" 'my/consult-line-forward
   "?" 'my/consult-line-backward)
 
@@ -276,29 +281,41 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+(defun my/window-vsplit-eshell ()
+  "Opens an eshell buffer in new window with vsplit"
+  (interactive)
+  (evil-window-vsplit)
+  (eshell))
+
+(general-define-key
+  :states '(normal)
+  :keymaps 'override
+  "C-t" (cons "show eshell in new window" 'my/window-vsplit-eshell))
+
 (general-define-key
   :states '(normal visual)
+  :keymaps 'override
   :prefix "SPC"
-  ""     (cons "space prefix" nil)
+  ""     '(:ignore t :wk "space prefix")
   "SPC"  (cons "M-x" 'execute-extended-command)
 
-  "f"    (cons "file" nil)
+  "f"    '(:ignore t :wk "file")
   "ff"   (cons "find" 'consult-fd)
   "fs"   (cons "search" 'consult-ripgrep)
   "fv"   (cons "dired" 'dired-jump)
 
-  "fe"   (cons "emacs" nil)
+  "fe"   '(:ignore t :wk "emacs")
   "fed"  (cons "open init" 'my/buffer-open-init-file)
 
-  "b"    (cons "buffer" nil)
+  "b"    '(:ignore t :wk "buffer")
   "bb"   (cons "buffers" 'consult-buffer-other-window)
   "bn"   (cons "next" 'next-buffer)
   "bp"   (cons "previous" 'previous-buffer)
 
-  "a"    (cons "application" nil)
+  "a"    '(:ignore t :wk "application")
   "au"   (cons "visualize undo tree" 'undo-tree-visualize)
 
-  "p"    (cons "project" nil)
+  "p"    '(:ignore t :wk "project")
   "pp"   (cons "projects" 'projectile-switch-project)
   "pf"   (cons "find file" 'projectile-find-file)
   "ps"   (cons "search" 'projectile-ripgrep)
@@ -370,6 +387,8 @@
   (eglot-ensure))
 (add-hook 'python-mode-hook 'my/setup-python-mode)
 
+
+;; Odin
 ; (with-eval-after-load 'eglot
 ;   (add-to-list 'eglot-server-programs '((odin-mode) . ("ols"))))
 ; (add-hook 'odin-mode-hook #'eglot)

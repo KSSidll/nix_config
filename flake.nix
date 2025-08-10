@@ -2,21 +2,20 @@
   description = "NixOS system config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     ags = {
       url = "github:aylur/ags";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ags, ... }:
+  outputs = { self, nixpkgs, home-manager, ags, ... }:
   let
     vars = {
       user = "sidll";
@@ -34,17 +33,11 @@
         inherit system;
         config.allowUnfree = true;
       };
-
-      lib-unstable = nixpkgs-unstable.lib;
-      pkgs-unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-      };
     in {
       nixosConfigurations.mainpc = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs pkgs-unstable vars ags;
+          inherit system pkgs vars ags;
           host = {
             hostName = "mainpc";
           };
@@ -64,7 +57,7 @@
       nixosConfigurations.laptop = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs pkgs-unstable vars ags;
+          inherit system pkgs vars ags;
           host = {
             hostName = "laptop";
           };

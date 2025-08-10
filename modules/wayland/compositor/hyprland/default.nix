@@ -1,7 +1,7 @@
-{ self, system, pkgs, pkgs-unstable, vars, ags, ... }:
+{ self, system, pkgs, vars, ags, ... }:
 let
   ags-system-overlay = ags.lib.bundle {
-    pkgs = pkgs-unstable;
+    pkgs = pkgs;
     src = ./ags;
     name = "system-overlay";
     entry = "app.ts";

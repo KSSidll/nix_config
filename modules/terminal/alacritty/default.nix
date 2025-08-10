@@ -11,11 +11,7 @@
   };
 
   fonts.packages = with pkgs; [
-      (nerdfonts.override {
-        fonts = [
-          "Hack"
-	];
-      })
+      nerd-fonts.hack
   ];
 
   home-manager.users.${vars.user} = {

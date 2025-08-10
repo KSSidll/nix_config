@@ -155,17 +155,15 @@
       jetbrains.pycharm-community-src
       tmux
       python314
-      python39
       uv # Python manager / resolver
     ];
   };
 
   services.gvfs.enable = true; # gnome virtual file system for nautilus file manager
 
-  hardware.pulseaudio.enable = false;
-
   services = {
     printing.enable = true;
+    # pulseaudio.enable = true;
 
     pipewire = {
       enable = true;

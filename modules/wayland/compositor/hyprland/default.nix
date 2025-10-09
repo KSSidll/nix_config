@@ -1,14 +1,17 @@
-{ self, system, pkgs, vars, ags, ... }:
+{ self, system, pkgs, vars, ags, astal, ... }:
 let
-  ags-system-overlay = ags.lib.bundle {
-    pkgs = pkgs;
-    src = ./ags;
+  ags-system-overlay = pkgs.stdenv.mkDerivation {
     name = "system-overlay";
-    entry = "app.ts";
-    gtk4 = true;
-    extraPackages = with ags.packages.${system}; [
+    src = ./ags;
+
+    nativeBuildInputs = with pkgs; [
+      wrapGAppsHook
+      gobject-introspection
+      ags.packages.${system}.default
+    ];
+
+    buildInputs = with ags.packages.${system}; [
       io
-      gjs
       tray
       apps
       notifd
@@ -18,7 +21,18 @@ let
       hyprland
       bluetooth
       battery
-    ];
+    ] ++ [pkgs.gjs];
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/bin
+      mkdir -p $out/share
+      cp -r * $out/share
+      ags bundle app.ts --gtk 4 $out/bin/system-overlay -d "SRC='$out/share'"
+
+      runHook postInstall
+    '';
   };
 in
 {

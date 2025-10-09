@@ -1,19 +1,21 @@
-import { App, Astal, Gdk } from "astal/gtk4"
+import app from "ags/gtk4/app"
+import Gdk from "gi://Gdk?version=4.0"
+import Astal from "gi://Astal"
 import BatteryLevel from "./BatteryLevel"
 import HyprlandWorkspaces from "./HyprlandWorkspaces"
 import Calendar from "./Calendar"
 
-export default function Bar(gdkmonitor: Gdk.Monitor) {
+export default function Bar(monitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
     return <window
         visible
         hexpand
         cssClasses={["Bar"]}
-        gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
+        gdkmonitor={monitor}
         anchor={LEFT | TOP | RIGHT}
-        application={App}
+        application={app}
     >
         <box
             cssName="bar_overlay_box"

@@ -1,4 +1,4 @@
-import { Gtk } from "astal/gtk4";
+import Gtk from "gi://Gtk?version=4.0";
 
 export default function Dot() {
     return <box>

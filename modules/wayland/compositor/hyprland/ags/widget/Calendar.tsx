@@ -1,9 +1,9 @@
-import { Variable } from "astal"
-import { Gtk } from "astal/gtk4"
+import { createPoll } from "ags/time"
+import Gtk from "gi://Gtk?version=4.0"
 import Dot from "./Dot"
 
-const time = Variable("").poll(1000, "date +%H:%M")
-const date = Variable("").poll(1000, "date +%d/%m")
+const time = createPoll("", 1000, "date +%H:%M")
+const date = createPoll("", 1000, "date +%d/%m")
 
 export default function Calendar() {
     return <box
@@ -13,11 +13,11 @@ export default function Calendar() {
             <box
                 valign={Gtk.Align.CENTER}
             >
-                <label label={time()} />
+                <label label={time} />
                 <box widthRequest={4} />
                 <Dot />
                 <box widthRequest={4} />
-                <label label={date()} />
+                <label label={date} />
             </box>
             <popover>
                 <Gtk.Calendar />

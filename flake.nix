@@ -9,13 +9,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    astal = {
+      url = "github:aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ags = {
       url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.astal.follows = "astal";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ags, ... }:
+  outputs = { self, nixpkgs, home-manager, ags, astal, ... }:
   let
     vars = {
       user = "sidll";
@@ -37,7 +43,7 @@
       nixosConfigurations.mainpc = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs vars ags;
+          inherit system pkgs vars ags astal;
           host = {
             hostName = "mainpc";
           };
@@ -57,7 +63,7 @@
       nixosConfigurations.laptop = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs vars ags;
+          inherit system pkgs vars ags astal;
           host = {
             hostName = "laptop";
           };

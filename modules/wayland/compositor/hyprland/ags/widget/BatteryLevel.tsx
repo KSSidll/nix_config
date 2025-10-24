@@ -19,7 +19,7 @@ function updateBatteryIconPath() {
         else if (batteryPercentage.get() > 60) { setBatteryIconPath(getPathFor("/assets/battery_60_charging.svg")) }
         else if (batteryPercentage.get() > 40) { setBatteryIconPath(getPathFor("/assets/battery_40_charging.svg")) }
         else if (batteryPercentage.get() > 20) { setBatteryIconPath(getPathFor("/assets/battery_20_charging.svg")) }
-        else { setBatteryIconPath("/assets/battery_00_charging.svg") }
+        else { setBatteryIconPath(getPathFor("/assets/battery_00_charging.svg")) }
     } else {
         if (batteryPercentage.get() > 99) { setBatteryIconPath(getPathFor("/assets/battery_full.svg")) }
         else if (batteryPercentage.get() > 90) { setBatteryIconPath(getPathFor("/assets/battery_90.svg")) }

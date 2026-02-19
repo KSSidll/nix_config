@@ -3,6 +3,7 @@
   imports = [
     /etc/nixos/hardware-configuration.nix
     ../modules/wayland/compositor/hyprland
+    ../modules/wayland/compositor/niri
     ../modules/theme/catppuccin/mocha-lavender
     ../modules/terminal/alacritty
     ../modules/editor/neovim

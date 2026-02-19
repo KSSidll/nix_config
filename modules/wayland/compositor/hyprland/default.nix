@@ -5,7 +5,7 @@ let
     src = ./ags;
 
     nativeBuildInputs = with pkgs; [
-      wrapGAppsHook
+      wrapGAppsHook3
       gobject-introspection
       ags.packages.${system}.default
     ];
@@ -29,7 +29,7 @@ let
       mkdir -p $out/bin
       mkdir -p $out/share
       cp -r * $out/share
-      ags bundle app.ts --gtk 4 $out/bin/system-overlay -d "SRC='$out/share'"
+      ags bundle app.tsx --gtk 4 $out/bin/system-overlay -d "SRC='$out/share'"
 
       runHook postInstall
     '';

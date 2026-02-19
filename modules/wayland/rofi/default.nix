@@ -2,7 +2,7 @@
 {
   environment = {
     systemPackages = with pkgs; [
-      rofi-wayland
+      rofi
     ];
   };
 

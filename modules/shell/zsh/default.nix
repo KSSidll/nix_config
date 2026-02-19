@@ -6,8 +6,6 @@
     promptInit = "";
   };
 
-
-
   environment = {
     variables = {
       SHELL = "zsh";

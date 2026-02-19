@@ -62,17 +62,6 @@
       package = pkgs.qemu_kvm;
       runAsRoot = true;
       swtpm.enable = true;
-      ovmf = {
-        enable = true;
-        packages = [
-          (
-            pkgs.OVMF.override {
-              secureBoot = true;
-              tpmSupport = true;
-            }
-          ).fd
-        ];
-      };
     };
   };
 
@@ -130,6 +119,9 @@
   programs.openvpn3.enable = true;
 
   environment = {
+    variables = {
+      GCM_CREDENTIAL_STORE = "cache";
+    };
     systemPackages = with pkgs; [
       virtio-win # virtualisation
       spice-gtk # virtualisation
@@ -137,6 +129,7 @@
       nautilus # file manager
       neovim # editor
       git
+      git-credential-manager
       wget
       tree
       btop
@@ -152,10 +145,11 @@
       vesktop # Vencord discord
       obs-studio
       android-studio
-      jetbrains.pycharm-community-src
+      jetbrains.pycharm-oss
       tmux
       python314
       uv # Python manager / resolver
+      zed-editor
     ];
   };
 

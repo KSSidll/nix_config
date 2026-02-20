@@ -9,6 +9,7 @@
     ../modules/editor/emacs
     ../modules/shell/zsh
     ../modules/browser/firefox
+    ../modules/browser/zen-browser
   ];
 
   environment = {

@@ -1,3 +1,4 @@
+/*****
 /******
 *    name: arkenfox user.js
 *    date: 4 November 2025
@@ -1328,3 +1329,4 @@ user_pref("browser.urlbar.trimURLs", false);
 
 // GTK rounded corners
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
+ef("widget.gtk.rounded-bottom-corners.enabled", true);

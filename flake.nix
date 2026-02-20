@@ -19,13 +19,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.astal.follows = "astal";
     };
-    
-    zen = {
-      url = "github:Eveeifyeve/zen-browser";
+
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgx.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ags, astal, ... }:
+  outputs = { self, nixpkgs, home-manager, ags, astal, zen-browser, ... }:
   let
     vars = {
       user = "sidll";
@@ -47,7 +48,7 @@
       nixosConfigurations.mainpc = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs vars ags astal;
+          inherit system pkgs vars ags astal zen-browser;
           host = {
             hostName = "mainpc";
           };
@@ -67,7 +68,7 @@
       nixosConfigurations.laptop = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs vars ags astal;
+          inherit system pkgs vars ags astal zen-browser;
           host = {
             hostName = "laptop";
           };

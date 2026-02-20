@@ -150,6 +150,8 @@
       python314
       uv # Python manager / resolver
       zed-editor
+      nixd
+      nil
     ];
   };
 

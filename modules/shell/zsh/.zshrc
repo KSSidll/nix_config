@@ -53,8 +53,8 @@ alias vnc='wayvnc -g -r -p --max-fps=144 -v 0.0.0.0'
 alias nix-update-flake='sudo nix flake update --flake ~/.config/nix'
 alias nix-rebuild-flake-pc='sudo nixos-rebuild switch --flake ~/.config/nix/.#mainpc --impure'
 alias nix-rebuild-flake-laptop='sudo nixos-rebuild switch --flake ~/.config/nix/.#laptop --impure'
-alias nix-update-os-pc='nix-update-flake; nix-rebuild-flake-pc'
-alias nix-update-os-laptop='nix-update-flake; nix-rebuild-flake-laptop'
+alias nix-update-os-pc='nix-update-flake; nix flake archive; nix-rebuild-flake-pc'
+alias nix-update-os-laptop='nix-update-flake; nix flake archive; nix-rebuild-flake-laptop'
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"

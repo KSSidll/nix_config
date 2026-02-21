@@ -22,7 +22,7 @@
 
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgx.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

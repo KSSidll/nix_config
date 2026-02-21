@@ -1,10 +1,12 @@
-{ self, system, pkgs, vars, ags, astal, ... }:
+{ system, pkgs, vars, inputs, ... }:
 let
+  ags = inputs.ags;
+in let
   ags-system-overlay = pkgs.stdenv.mkDerivation {
-    name = "system-overlay";
-    src = ./ags;
+  name = "system-overlay";
+  src = ./ags;
 
-    nativeBuildInputs = with pkgs; [
+  nativeBuildInputs = with pkgs; [
       wrapGAppsHook3
       gobject-introspection
       ags.packages.${system}.default

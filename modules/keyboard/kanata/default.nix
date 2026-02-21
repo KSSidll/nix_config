@@ -1,4 +1,4 @@
-{ vars, ... }:
+{ ... }:
 {
   services.kanata = {
     enable = true;

@@ -1,5 +1,7 @@
-{ pkgs, vars, zen-browser, ... }:
-{
+{ pkgs, vars, inputs, ... }:
+let
+  zen-browser = inputs.zen-browser;
+in {
   environment = {
     systemPackages = [
         zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default

@@ -1,5 +1,5 @@
 
-{ self, system, pkgs, vars, ags, astal, ... }:
+{ pkgs, vars, ... }:
 {
   imports = [
     ../../dunst

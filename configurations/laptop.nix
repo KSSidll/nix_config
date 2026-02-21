@@ -1,5 +1,9 @@
-{ pkgs, ... }:
-{
+args@{ pkgs, ... }:
+let
+  vars = args.vars // {
+
+  };
+in {
   imports = [
     /etc/nixos/hardware-configuration.nix
     ../modules/wayland/compositor/hyprland

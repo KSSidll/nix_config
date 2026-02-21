@@ -26,8 +26,10 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ags, astal, zen-browser, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
   let
+    inputs = self.inputs;
+
     vars = {
       user = "sidll";
     };
@@ -35,53 +37,45 @@
     systems = [ "x86_64-linux" ];
     forEachSystem = nixpkgs.lib.genAttrs systems;
   in {
-    default = [];
-
     packages = forEachSystem ( system:
     let
       lib = nixpkgs.lib;
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
+
+      commonModules = [
+        {
+          nixpkgs.config.allowUnfree = true;
+        }
+
+        ./configurations/common.nix
+
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+        }
+      ];
     in {
+
       nixosConfigurations.mainpc = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs vars ags astal zen-browser;
-          host = {
-            hostName = "mainpc";
-          };
+          inherit system vars inputs;
+          host.hostName = "mainpc";
         };
 
-        modules = [
+        modules = commonModules ++ [
           ./configurations/mainpc.nix
-          ./configurations/common.nix
-
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
         ];
       };
 
       nixosConfigurations.laptop = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system pkgs vars ags astal zen-browser;
-          host = {
-            hostName = "laptop";
-          };
+          inherit system vars inputs;
+          host.hostName = "laptop";
         };
 
-        modules = [
+        modules = commonModules ++ [
           ./configurations/laptop.nix
-          ./configurations/common.nix
-
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
         ];
       };
     });

@@ -145,13 +145,15 @@
       vesktop # Vencord discord
       obs-studio
       android-studio
-      jetbrains.pycharm-oss
+      jetbrains.pycharm
       tmux
       python314
       uv # Python manager / resolver
       zed-editor
       nixd
       nil
+      lua-language-server
+      package-version-server
     ];
   };
 

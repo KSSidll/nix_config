@@ -1,0 +1,627 @@
+@use "generated/theme" as *;
+
+$surface-color: rgba($base, 0.9);
+$frame-color: rgba($accent, 0.4);
+$transition: 200ms ease-out;
+$hover-transition: 150ms ease-out;
+$highlight: rgba($accent, 0.15);
+$scrim: rgba($crust, 0.5);
+$inner-rounding: $rounding - 4px;
+
+@mixin typography {
+  color: $text;
+  font-family: $font-sans, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  font-feature-settings: "tnum";
+}
+
+@mixin frame {
+  padding: 12px;
+  background: $surface-color;
+  border: $border solid $frame-color;
+  border-radius: $rounding;
+  color: $text;
+}
+
+@mixin bar-button {
+  padding: 0 8px;
+  margin: 4px 0;
+  border-radius: $inner-rounding;
+  transition: background $hover-transition, color $hover-transition;
+}
+
+@mixin text-button {
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: $inner-rounding;
+  background: rgba($surface1, 0.6);
+
+  &:hover {
+    background: $highlight;
+    color: $accent;
+  }
+}
+
+@mixin bar-button-active {
+  color: $accent;
+  background: $highlight;
+}
+
+* {
+  all: unset;
+}
+
+window.PanelHost {
+  @include typography;
+  background: transparent;
+
+  &.modal {
+    background: $scrim;
+  }
+}
+
+window.Scrim {
+  background: $scrim;
+}
+
+window.Bar {
+  @include typography;
+  background: transparent;
+
+  .bar {
+    min-height: 32px;
+    padding: 0 $gap;
+    background: $surface-color;
+    border-bottom: $border solid $frame-color;
+  }
+}
+
+.section {
+  padding: 0 4px;
+}
+
+.panel-button {
+  @include bar-button;
+
+  &.muted {
+    color: $overlay1;
+  }
+
+  &:hover,
+  &.open {
+    @include bar-button-active;
+  }
+}
+
+.panel-button.privacy {
+  color: $peach;
+  background: rgba($peach, 0.12);
+
+  &:hover,
+  &.open {
+    color: $peach;
+    background: rgba($peach, 0.24);
+  }
+}
+
+.tray-item {
+  > button {
+    @include bar-button;
+  }
+
+  &:hover > button,
+  > button:checked {
+    @include bar-button-active;
+  }
+}
+
+.workspace-target {
+  padding: 0 3px;
+
+  &:hover .workspace {
+    background: rgba($text, 0.7);
+  }
+}
+
+.workspace {
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: 999px;
+  background: rgba($text, 0.35);
+  transition: min-width $transition, background $transition;
+
+  &.urgent {
+    background: $red;
+  }
+
+  &.active,
+  .workspace-target:hover &.active {
+    min-width: 24px;
+    background: $accent;
+  }
+}
+
+.clock {
+  .date {
+    color: $subtext0;
+    transition: color $hover-transition;
+  }
+
+  &:hover .date,
+  &.open .date {
+    color: $accent;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.panel-frame {
+  @include frame;
+  animation: panel-in 120ms ease-out;
+  margin-top: $gap;
+
+  .heading {
+    font-weight: 600;
+  }
+
+  .panel {
+    min-width: 280px;
+  }
+
+  .panel-heading {
+    min-height: 28px;
+  }
+}
+
+tooltip {
+  padding: 4px 8px;
+  background: $surface-color;
+  border: 1px solid $frame-color;
+  border-radius: $inner-rounding;
+  color: $text;
+  font-family: $font-sans, sans-serif;
+  font-size: 12px;
+}
+
+calendar {
+  > header {
+    padding-bottom: 6px;
+
+    > button {
+      padding: 0 6px;
+      border-radius: $rounding;
+      color: $subtext0;
+
+      &:hover {
+        color: $accent;
+      }
+    }
+  }
+
+  > grid > label {
+    min-width: 28px;
+    min-height: 24px;
+    border-radius: $rounding;
+
+    &.day-name {
+      color: $subtext0;
+      font-size: 11px;
+    }
+
+    &.other-month {
+      color: $overlay0;
+    }
+
+    &.today {
+      color: $accent;
+      font-weight: 700;
+    }
+
+    &:selected {
+      background: rgba($accent, 0.2);
+    }
+  }
+}
+
+.battery {
+  &.charging image {
+    color: $green;
+  }
+
+  &.low image {
+    color: $yellow;
+  }
+
+  &.critical {
+    color: $red;
+  }
+}
+
+popover.menu {
+  > contents {
+    @include frame;
+    @include typography;
+    animation: panel-in 120ms ease-out;
+    margin-top: $gap;
+    padding: 4px;
+  }
+
+  modelbutton {
+    min-height: 26px;
+    padding: 0 10px;
+    border-radius: $inner-rounding;
+
+    &:hover,
+    &:focus {
+      background: $highlight;
+    }
+
+    &:disabled {
+      color: $overlay0;
+    }
+
+    > arrow {
+      min-width: 16px;
+      -gtk-icon-source: -gtk-icontheme("pan-end-symbolic");
+    }
+  }
+
+  check,
+  radio {
+    min-width: 14px;
+    min-height: 14px;
+    margin-right: 8px;
+    border: 1px solid $overlay1;
+    border-radius: 4px;
+
+    &:checked {
+      background: $accent;
+      border-color: $accent;
+    }
+  }
+
+  radio {
+    border-radius: 999px;
+  }
+
+  separator {
+    min-height: 1px;
+    margin: 4px 6px;
+    background: $surface1;
+  }
+}
+
+.panel-frame {
+  separator {
+    min-height: 1px;
+    margin: 2px 0;
+    background: $surface1;
+  }
+
+  .row {
+    min-height: 30px;
+    padding: 0 10px;
+    border-radius: $inner-rounding;
+
+    &:hover {
+      background: $highlight;
+    }
+
+    &.selected {
+      color: $accent;
+    }
+  }
+
+  .setting {
+    min-height: 30px;
+    padding-left: 10px;
+  }
+
+  .password {
+    min-height: 28px;
+    margin: 4px 10px 6px;
+    padding: 0 8px;
+    border: 1px solid $surface2;
+    border-radius: $inner-rounding;
+
+    &:focus-within {
+      border-color: $accent;
+    }
+
+    &.error {
+      border-color: $red;
+    }
+
+    > image {
+      color: $subtext0;
+    }
+  }
+
+  .icon-button {
+    padding: 6px;
+    border-radius: $inner-rounding;
+
+    &:hover {
+      background: $highlight;
+    }
+  }
+
+  .value {
+    color: $subtext0;
+  }
+
+  .code {
+    margin: 4px 0 6px;
+    font-size: 2em;
+    letter-spacing: 0.2em;
+  }
+}
+
+switch {
+  min-width: 44px;
+  min-height: 24px;
+  border-radius: 999px;
+  background: $surface1;
+  transition: background $transition;
+
+  &:checked {
+    background: $accent;
+  }
+
+  > slider {
+    min-width: 20px;
+    min-height: 20px;
+    margin: 2px;
+    border-radius: 999px;
+    background: $text;
+  }
+}
+
+scale {
+  padding: 8px 0;
+
+  > trough {
+    min-height: 4px;
+    border-radius: 999px;
+    background: $surface1;
+
+    > highlight {
+      border-radius: 999px;
+      background: $accent;
+    }
+
+    > slider {
+      min-width: 14px;
+      min-height: 14px;
+      margin: -5px;
+      border-radius: 999px;
+      background: $text;
+    }
+  }
+}
+
+window.NotificationPopups {
+  @include typography;
+  background: transparent;
+
+  .popups {
+    margin: $gap $gap 0 0;
+  }
+}
+
+.notification {
+  padding: 10px;
+  border-radius: $inner-rounding;
+  background: rgba($surface0, 0.5);
+
+  &.popup {
+    @include frame;
+    animation: panel-in 120ms ease-out;
+  }
+
+  &.critical {
+    border: 1px solid $peach;
+  }
+
+  &.popup.critical {
+    border-width: $border;
+  }
+
+  .app-icon {
+    color: $subtext0;
+  }
+
+  .app-name,
+  .time {
+    color: $subtext0;
+    font-size: 12px;
+  }
+
+  .summary {
+    font-weight: 600;
+  }
+
+  .body {
+    color: $subtext1;
+  }
+
+  .image {
+    border-radius: $inner-rounding;
+  }
+
+  .close {
+    padding: 2px;
+    border-radius: $inner-rounding;
+    color: $subtext0;
+
+    &:hover {
+      color: $text;
+      background: $highlight;
+    }
+  }
+
+  .action {
+    @include text-button;
+  }
+}
+
+.panel-frame {
+  .group-title {
+    color: $subtext0;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .empty {
+    min-height: 60px;
+    color: $overlay1;
+  }
+
+  .activity {
+    min-height: 40px;
+    padding: 0 0 0 10px;
+  }
+
+  .text-button {
+    @include text-button;
+  }
+
+  .notification-list {
+    margin-right: 10px;
+  }
+}
+
+.panel-button.unseen image {
+  color: $accent;
+}
+
+scrollbar {
+  margin-left: 4px;
+
+  slider {
+    min-width: 4px;
+    border-radius: 999px;
+    background: $surface2;
+  }
+}
+
+.quick-settings-button image.muted {
+  color: $overlay1;
+}
+
+.quick-settings-button image.connecting {
+  animation: connecting 1.2s ease-in-out infinite;
+}
+
+@keyframes connecting {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.quick-settings {
+  min-width: 340px;
+
+  .quick-settings-header {
+    min-height: 32px;
+  }
+
+  .slider-row {
+    min-height: 32px;
+  }
+
+  .tile {
+    min-height: 52px;
+    border-radius: $inner-rounding;
+    background: rgba($surface0, 0.6);
+    transition: background $hover-transition;
+
+    .tile-toggle {
+      padding: 0 12px;
+      border-radius: $inner-rounding;
+    }
+
+    .tile-details {
+      padding: 0 10px;
+      border-radius: $inner-rounding;
+    }
+
+    .tile-toggle:hover,
+    .tile-details:hover {
+      background: $highlight;
+    }
+
+    .tile-subtitle {
+      color: $subtext0;
+      font-size: 12px;
+    }
+
+    &.active {
+      background: rgba($accent, 0.85);
+      color: $base;
+
+      .tile-subtitle {
+        color: rgba($base, 0.75);
+      }
+
+      .tile-toggle:hover,
+      .tile-details:hover {
+        background: rgba($base, 0.15);
+      }
+    }
+  }
+
+  .armed {
+    color: $red;
+    background: rgba($red, 0.12);
+  }
+}
+
+window.Osd {
+  @include typography;
+  background: transparent;
+
+  .osd {
+    @include frame;
+    margin-top: $gap;
+    min-width: 260px;
+    padding: 10px 14px;
+    animation: panel-in 120ms ease-out;
+  }
+
+  .osd-label {
+    color: $subtext0;
+  }
+
+  levelbar {
+    > trough {
+      min-height: 6px;
+      border-radius: 999px;
+      background: $surface1;
+
+      > block.filled {
+        border-radius: 999px;
+        background: $accent;
+      }
+    }
+  }
+}
+
+.player-info {
+  padding: 6px;
+}
+
+.player .cover {
+  border-radius: $inner-rounding;
+  background: $highlight;
+
+  .placeholder {
+    padding: 12px;
+  }
+}

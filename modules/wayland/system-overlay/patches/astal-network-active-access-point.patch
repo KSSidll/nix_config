@@ -1,0 +1,50 @@
+--- a/src/wifi.vala
++++ b/src/wifi.vala
+@@ -48,17 +48,11 @@
+         this.device = device;
+ 
+         foreach (var ap in device.access_points) {
+-            var new_ap = new AccessPoint(this, ap);
+-            _access_points.set(ap.bssid, new_ap);
+-            access_point_added(new_ap);
++            add_access_point(ap);
+         }
+ 
+         device.access_point_added.connect((access_point) => {
+-            var ap = (NM.AccessPoint)access_point;
+-            var new_ap = new AccessPoint(this, ap);
+-            _access_points.set(ap.bssid, new_ap);
+-            access_point_added(new_ap);
+-            notify_property("access-points");
++            add_access_point((NM.AccessPoint)access_point);
+         });
+ 
+         device.access_point_removed.connect((access_point) => {
+@@ -142,6 +136,18 @@
+         ssid = active_access_point.ssid;
+     }
+ 
++    // NetworkManager can announce an access point as active before announcing it as added
++    private AccessPoint add_access_point(NM.AccessPoint ap) {
++        var existing = _access_points.get(ap.bssid);
++        if (existing != null) return existing;
++
++        var new_ap = new AccessPoint(this, ap);
++        _access_points.set(ap.bssid, new_ap);
++        access_point_added(new_ap);
++        notify_property("access-points");
++        return new_ap;
++    }
++
+     private void on_active_access_point() {
+         if ((ap_handler > 0) && (active_access_point != null)) {
+             active_access_point.disconnect(ap_handler);
+@@ -151,7 +157,7 @@
+ 
+         var ap = device.active_access_point;
+         if (ap != null) {
+-            active_access_point = _access_points.get(ap.bssid);
++            active_access_point = add_access_point(ap);
+             on_active_access_point_notify();
+             ap_handler = active_access_point.notify.connect(on_active_access_point_notify);
+         }

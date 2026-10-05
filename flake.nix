@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -24,61 +25,52 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    arkenfox = {
+      url = "github:arkenfox/user.js/144.0";
+      flake = false;
+    };
+
+    catppuccin-palette = {
+      url = "github:catppuccin/palette";
+      flake = false;
+    };
+
+    yazi-flavors = {
+      url = "github:yazi-rs/flavors";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = inputs@{ nixpkgs, ... }:
   let
-    inputs = self.inputs;
-
     vars = {
       user = "sidll";
     };
 
-    systems = [ "x86_64-linux" ];
-    forEachSystem = nixpkgs.lib.genAttrs systems;
-  in {
-    packages = forEachSystem ( system:
-    let
-      lib = nixpkgs.lib;
+    mkHost = hostName: nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs vars; };
 
-      commonModules = [
-        {
-          nixpkgs.config.allowUnfree = true;
-        }
-
-        ./configurations/common.nix
-
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-        }
+      modules = [
+        ./modules/core
+        ./hosts/${hostName}
+        { networking.hostName = hostName; }
       ];
-    in {
+    };
+  in {
+    nixosConfigurations = nixpkgs.lib.genAttrs [ "laptop" "mainpc" ] mkHost;
 
-      nixosConfigurations.mainpc = lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit system vars inputs;
-          host.hostName = "mainpc";
-        };
-
-        modules = commonModules ++ [
-          ./configurations/mainpc.nix
+    devShells.x86_64-linux.ags =
+      let
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        agsPkgs = inputs.ags.packages.x86_64-linux;
+      in
+      pkgs.mkShell {
+        packages = [
+          (import ./modules/wayland/system-overlay/astal.nix { inherit pkgs agsPkgs; }).ags
+          pkgs.watchexec
+          pkgs.typescript
         ];
       };
-
-      nixosConfigurations.laptop = lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit system vars inputs;
-          host.hostName = "laptop";
-        };
-
-        modules = commonModules ++ [
-          ./configurations/laptop.nix
-        ];
-      };
-    });
   };
 }

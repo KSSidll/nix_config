@@ -10,7 +10,11 @@ let
   capitalize = s: lib.toUpper (lib.substring 0 1 s) + lib.substring 1 (-1) s;
 
   icons = {
-    package = pkgs.catppuccin-papirus-folders.override { inherit flavor accent; };
+    # the package builds icon caches that gtk3's setup hook then deletes, and without them every GTK app reads the
+    # theme's 340,000 files when it starts
+    package = (pkgs.catppuccin-papirus-folders.override { inherit flavor accent; }).overrideAttrs {
+      dontDropIconThemeCache = true;
+    };
     name = "Papirus-Dark";
   };
 

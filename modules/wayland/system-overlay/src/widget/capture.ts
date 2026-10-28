@@ -5,8 +5,10 @@ import GLib from "gi://GLib"
 import { recordings } from "../config"
 import { prompt } from "./agents/prompt"
 import { audio } from "./controls"
-import { action, focusedOutput, query, Window } from "./niri"
-import { closePanel } from "./panels"
+import { showInFiles } from "./files"
+import { action, focusedOutput, onScreenshot, query, Window } from "./niri"
+import { notify } from "./notifications/send"
+import { closePanel, launch } from "./panels"
 
 Gio._promisify(Gio.Subprocess.prototype, "communicate_utf8_async", "communicate_utf8_finish")
 
@@ -32,6 +34,28 @@ export function screenshot(kind: "select" | "screen" | "window") {
         .then((window) => window && action({ ScreenshotWindow: { id: window.id, write_to_disk: true, show_pointer: false, path: null } }))
         .catch((error: unknown) => console.error(`Failed to pick a window to screenshot: ${error}`))
   })
+}
+
+function screenshotTaken(path: string | null) {
+  notify({
+    app: "Screenshot",
+    icon: "camera-photo-symbolic",
+    summary: path ? "Screenshot saved" : "Screenshot copied",
+    body: path ? GLib.path_get_basename(path) : "It's in the clipboard.",
+    image: path ?? undefined,
+    actions: path
+      ? [
+          { id: "open", label: "Open", run: () => launch("xdg-open", path) },
+          // satty's config saves back to the file and copies the result
+          { id: "annotate", label: "Annotate", run: () => launch("satty", "--filename", path, "--output-filename", path) },
+          { id: "show", label: "Show in Files", run: () => showInFiles(path) },
+        ]
+      : [],
+  }).catch((error: unknown) => console.error(`Failed to report a screenshot [path: ${path}]: ${error}`))
+}
+
+export function startScreenshotNotifications() {
+  onScreenshot(screenshotTaken)
 }
 
 type Recording = { process: Gio.Subprocess; pid: number; started: number; target: string }

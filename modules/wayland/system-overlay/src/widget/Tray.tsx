@@ -3,6 +3,7 @@ import Gdk from "gi://Gdk?version=4.0"
 import Gio from "gi://Gio"
 import Gtk from "gi://Gtk?version=4.0"
 import AstalTray from "gi://AstalTray"
+import { action, windowOfBusName } from "./niri"
 import { trackMenu } from "./panels"
 
 // GTK's popover menu mishandles a submenu rebuilt in place: it keeps the old submenu page, whose items point at ids
@@ -19,6 +20,19 @@ function snapshot(model: Gio.MenuModel): Gio.Menu {
     menu.append_item(item)
   }
   return menu
+}
+
+// An app with a window gets it focused, since its own request to be raised is refused; one that's focused, or has no
+// window, gets the click, which usually hides or opens it.
+async function activate(item: AstalTray.TrayItem) {
+  const busName = item.itemId.split("/")[0]
+  try {
+    const window = await windowOfBusName(busName)
+    if (window && !window.is_focused) return action({ FocusWindow: { id: window.id } })
+  } catch (error) {
+    console.error(`Failed to find the window of a tray item [${item.itemId}]: ${error}`)
+  }
+  item.activate(0, 0)
 }
 
 function TrayItem({ item }: { item: AstalTray.TrayItem }) {
@@ -50,7 +64,7 @@ function TrayItem({ item }: { item: AstalTray.TrayItem }) {
         onPressed={(gesture) => {
           if (item.isMenu) return
           gesture.set_state(Gtk.EventSequenceState.CLAIMED)
-          item.activate(0, 0)
+          activate(item)
         }}
       />
       <Gtk.GestureClick

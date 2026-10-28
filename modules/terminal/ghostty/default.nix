@@ -1,6 +1,31 @@
-{ lib, vars, theme, ... }:
+{ config, lib, pkgs, vars, theme, ... }:
+let
+  ghostty = config.home-manager.users.${vars.user}.programs.ghostty.package;
+
+  # the terminal for desktop entries that ask for one; Ghostty's own entry starts a separate instance for a command,
+  # with the whole startup that costs, while this opens a window of the running one
+  window = pkgs.makeDesktopItem {
+    name = "ghostty-window";
+    desktopName = "Ghostty window";
+    exec = "${lib.getExe ghostty} +new-window";
+    noDisplay = true;
+    categories = [ "System" "TerminalEmulator" ];
+    extraConfig = {
+      X-TerminalArgExec = "-e";
+      X-TerminalArgDir = "--working-directory=";
+      X-TerminalArgTitle = "--title=";
+    };
+  };
+in
 {
   environment.variables.TERMINAL = "ghostty";
+
+  environment.systemPackages = [ window ];
+  # GLib starts terminal apps through xdg-terminal-exec, and its own fallback list doesn't include Ghostty
+  xdg.terminal-exec = {
+    enable = true;
+    settings.default = [ "ghostty-window.desktop" ];
+  };
 
   home-manager.users.${vars.user} = { config, ... }: {
     # the service's unit wants graphical-session.target but home-manager only links it, so nothing would start it

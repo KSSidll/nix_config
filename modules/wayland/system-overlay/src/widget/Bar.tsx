@@ -10,6 +10,8 @@ import Notifications from "./notifications/Notifications"
 import { onCleanup } from "ags"
 import { attachPanelHost } from "./panels"
 import Media from "./media/Media"
+import Syncthing from "./syncthing/Syncthing"
+import { syncthing } from "../config"
 
 export default function Bar({
   monitor
@@ -39,6 +41,7 @@ export default function Bar({
         </box>
         <box $type="end" cssClasses={["section"]} spacing={2}>
           <Media />
+          {syncthing && <Syncthing address={syncthing.address} />}
           <Privacy />
           <Tray />
           <QuickSettings />

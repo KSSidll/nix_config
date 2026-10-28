@@ -121,6 +121,7 @@ let
 
         Mod+Return repeat=false { spawn "ghostty" "+new-window"; }
         Mod+D repeat=false { ${overlay [ "launcher" ]} }
+        Mod+E repeat=false { spawn "nautilus" "--new-window"; }
 
         Mod+W repeat=false { close-window; }
         Mod+F repeat=false { toggle-window-floating; }

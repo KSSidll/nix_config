@@ -16,7 +16,7 @@ let
     battery
     powerprofiles
     mpris
-  ]) ++ [ pkgs.polkit.out ];
+  ]) ++ [ pkgs.polkit.out pkgs.libsoup_3 ];
 in
 {
   inherit libraries;

@@ -66,6 +66,7 @@ in
         ll = "ls -la --color";
         c = "clear";
         enix = "cd ~/.config/nix; $EDITOR .";
+        cnix = "cd ~/.config/nix";
         nix-update-flake = "sudo nix flake update --flake ~/.config/nix";
         nix-rebuild-flake-pc = "sudo nixos-rebuild switch --flake ~/.config/nix/.#mainpc --impure";
         nix-rebuild-flake-laptop = "sudo nixos-rebuild switch --flake ~/.config/nix/.#laptop --impure";

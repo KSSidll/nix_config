@@ -94,6 +94,21 @@ window.Bar {
   }
 }
 
+.panel-button.syncthing {
+  color: $blue;
+  background: rgba($blue, 0.12);
+
+  &:hover,
+  &.open {
+    color: $blue;
+    background: rgba($blue, 0.24);
+  }
+
+  image {
+    animation: connecting 1.2s ease-in-out infinite;
+  }
+}
+
 .panel-button.privacy {
   color: $peach;
   background: rgba($peach, 0.12);

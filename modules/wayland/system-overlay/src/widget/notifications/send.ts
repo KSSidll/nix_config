@@ -52,11 +52,13 @@ function subscribe() {
 }
 
 // resolves to the notification's id, which a later one can replace
-export async function notify({ app, icon, summary, body, urgency = Urgency.normal, replaces = 0, actions = [] }: {
+export async function notify({ app, icon, summary, body, image, urgency = Urgency.normal, replaces = 0, actions = [] }: {
   app: string
   icon: string
   summary: string
   body: string
+  // a file shown in the notification, beside its text
+  image?: string
   urgency?: number
   replaces?: number
   actions?: Action[]
@@ -71,7 +73,10 @@ export async function notify({ app, icon, summary, body, urgency = Urgency.norma
       summary,
       body,
       actions.flatMap((it) => [it.id, it.label]),
-      { urgency: GLib.Variant.new_byte(urgency) },
+      {
+        urgency: GLib.Variant.new_byte(urgency),
+        ...(image ? { "image-path": GLib.Variant.new_string(image) } : {}),
+      },
       -1,
     ]),
   )

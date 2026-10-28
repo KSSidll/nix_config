@@ -38,6 +38,39 @@ let
       "media.av1.enabled" = false;
     };
 
+  # by ID, with the addons.mozilla.org slug they're installed from; Zen installs them at start and can't remove them
+  addons = {
+    "uBlock0@raymondhill.net" = "ublock-origin";
+    "addon@darkreader.org" = "darkreader";
+    "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}" = "styl-us";
+    "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = "vimium-ff";
+    "@testpilot-containers" = "multi-account-containers";
+    "{c607c8df-14a7-4f28-894f-29e8722976af}" = "temporary-containers";
+    "jid1-HdwPLukcGQeOSh@jetpack" = "location-guard";
+    "idcac-pub@guus.ninja" = "istilldontcareaboutcookies";
+    "{60f82f00-9ad5-4de5-b31c-b16a47c51558}" = "cookie-quick-manager";
+    "sponsorBlocker@ajay.app" = "sponsorblock";
+    "{762f9885-5a13-4abd-9c77-433dcd38b8fd}" = "return-youtube-dislikes";
+    "@react-devtools" = "react-devtools";
+    "keepassxc-browser@keepassxc.org" = "keepassxc-browser";
+  };
+
+  # the flake's package is this wrapper with no way to pass policies; it replaces the policies the unwrapped browser
+  # ships, so their DisableAppUpdate is repeated here. wrapFirefox picks the FFmpeg ABI from the version, which is
+  # Firefox's rather than Zen's.
+  unwrapped = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.zen-browser-unwrapped;
+  package = pkgs.wrapFirefox (unwrapped // { version = unwrapped.firefoxVersion; }) {
+    pname = "zen-browser";
+    inherit (unwrapped) version;
+    extraPolicies = {
+      DisableAppUpdate = true;
+      ExtensionSettings = lib.mapAttrs (_: slug: {
+        install_url = "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
+        installation_mode = "force_installed";
+      }) addons;
+    };
+  };
+
   # JSON literals (strings, bools, numbers) are valid JS, so toJSON quotes values correctly
   overridesJs = pkgs.writeText "user-overrides.js" (
     "\n/*** USER OVERRIDES ***/\n"
@@ -50,9 +83,7 @@ in {
     description = "Whether the GPU decodes AV1 video; without it, Zen doesn't offer AV1 to sites.";
   };
 
-  config.environment.systemPackages = [
-    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+  config.environment.systemPackages = [ package ];
 
   config.home-manager.users.${vars.user}.home.file = {
     ".config/zen/profiles.ini".text = lib.generators.toINI { } {

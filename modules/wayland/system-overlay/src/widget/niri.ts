@@ -3,6 +3,7 @@ import Gio from "gi://Gio"
 import GLib from "gi://GLib"
 
 Gio._promisify(Gio.DataInputStream.prototype, "read_line_async", "read_line_finish_utf8")
+Gio._promisify(Gio.DBusConnection.prototype, "call", "call_finish")
 
 export type Workspace = {
   id: number
@@ -25,7 +26,7 @@ export type Cast = {
   pw_node_id: number | null
 }
 
-export type Window = { id: number; title: string | null; app_id: string | null; pid: number | null }
+export type Window = { id: number; title: string | null; app_id: string | null; pid: number | null; is_focused: boolean }
 
 export type Mode = { width: number; height: number; refresh_rate: number; is_preferred: boolean }
 
@@ -48,6 +49,7 @@ type Event =
   | { CastsChanged: { casts: Cast[] } }
   | { CastStartedOrChanged: { cast: Cast } }
   | { CastStopped: { stream_id: number } }
+  | { ScreenshotCaptured: { path: string | null } }
 
 const [workspaces, setWorkspaces] = createState<Workspace[]>([])
 export { workspaces }
@@ -97,6 +99,28 @@ export async function query<T>(name: string, answer = name): Promise<T> {
   }
 }
 
+// An app asking to be raised from a D-Bus call (MPRIS, a tray click) has no activation token, which niri can refuse;
+// its window is found through the process that owns its bus name instead.
+export async function windowOfBusName(busName: string) {
+  const reply = await Gio.DBus.session.call(
+    "org.freedesktop.DBus",
+    "/org/freedesktop/DBus",
+    "org.freedesktop.DBus",
+    "GetConnectionUnixProcessID",
+    new GLib.Variant("(s)", [busName]),
+    null,
+    Gio.DBusCallFlags.NONE,
+    -1,
+    null,
+  )
+  const [pid] = reply.deepUnpack() as [number]
+  return (await query<Window[]>("Windows")).find((it) => it.pid === pid) ?? null
+}
+
+// null when the screenshot was only copied to the clipboard
+const screenshotListeners: ((path: string | null) => void)[] = []
+export const onScreenshot = (listener: (path: string | null) => void) => screenshotListeners.push(listener)
+
 function apply(event: Event) {
   const all = workspaces.get()
   if ("WorkspacesChanged" in event) {
@@ -122,6 +146,8 @@ function apply(event: Event) {
     setCasts([...casts.get().filter((it) => it.stream_id !== cast.stream_id), cast])
   } else if ("CastStopped" in event) {
     setCasts(casts.get().filter((it) => it.stream_id !== event.CastStopped.stream_id))
+  } else if ("ScreenshotCaptured" in event) {
+    for (const listener of screenshotListeners) listener(event.ScreenshotCaptured.path)
   }
 }
 

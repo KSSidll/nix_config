@@ -163,9 +163,22 @@ in
           settings = noSpn;
         };
 
-        # rootless Docker's network: every container connection and image pull goes out through this one process
+        # containers reach the network through slirp4netns, while the daemon and the buildx plugin, which run at
+        # store paths of their own rather than the docker package's, connect out themselves
         Docker = lib.mkIf config.virtualisation.docker.rootless.enable {
-          packages = [ pkgs.slirp4netns ];
+          packages = [
+            pkgs.slirp4netns
+            {
+              package = config.virtualisation.docker.rootless.package.moby;
+              directory = "libexec/docker";
+              name = "dockerd";
+            }
+            {
+              package = pkgs.docker-buildx;
+              directory = "libexec/docker/cli-plugins";
+              name = "docker-buildx";
+            }
+          ];
           settings = noSpn;
         };
 

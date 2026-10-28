@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  imports = [ ./files.nix ./defaults.nix ];
+  imports = [ ./files.nix ./defaults.nix ./keepassxc ];
 
   programs.localsend = {
     enable = true;
@@ -8,7 +8,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    keepassxc
     pavucontrol
     vesktop
   ];

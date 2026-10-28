@@ -7,12 +7,14 @@ import { handleRequest } from "./widget/requests"
 import { startBluetoothAgent } from "./widget/agents/bluetooth"
 import { startNetworkAgent } from "./widget/agents/network"
 import { startPolkitAgent } from "./widget/agents/polkit"
-import { launcher, widgets } from "./config"
+import { launcher, syncthing, widgets } from "./config"
 import { startDisplays } from "./widget/displays"
 import LauncherScrim from "./widget/launcher"
 import { startMedia } from "./widget/media/state"
 import { startBatteryWarnings } from "./widget/battery-warnings"
 import { startFailureNotifications } from "./widget/failures"
+import { startSyncthing } from "./widget/syncthing/state"
+import { startScreenshotNotifications } from "./widget/capture"
 import { createBinding, For, This } from "ags"
 
 function main() {
@@ -23,6 +25,8 @@ function main() {
   startMedia()
   if (widgets.battery) startBatteryWarnings()
   startFailureNotifications()
+  if (syncthing) startSyncthing()
+  startScreenshotNotifications()
   const monitors = createBinding(app, "monitors")
 
   return (

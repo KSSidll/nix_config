@@ -23,6 +23,11 @@ let
       inherit (cfg) recordings launcher;
       battery.sleepsAt = config.services.upower.percentageAction;
       nightLight = config.nightLight.enable;
+      syncthing = if config.services.syncthing.enable then {
+        address = "http://${config.services.syncthing.guiAddress}";
+        # read at runtime for the API key, which stays out of the store
+        config = "${config.services.syncthing.configDir}/config.xml";
+      } else null;
       inherit (theme) geometry;
     };
   };
@@ -145,27 +150,47 @@ in
       pkgs.wf-recorder
       pkgs.slurp
       pkgs.wl-mirror
+      # a screenshot notification's Annotate
+      pkgs.satty
     ];
 
-    home-manager.users.${vars.user}.systemd.user.services = {
-      system-overlay = {
-        Unit = {
-          Description = "System overlay";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+    home-manager.users.${vars.user} = {
+      # Enter saves the annotated screenshot over its file, copies it and closes; wl-copy keeps serving the clipboard
+      # after satty exits
+      xdg.configFile."satty/config.toml".source = (pkgs.formats.toml { }).generate "satty.toml" {
+        general = {
+          early-exit = true;
+          copy-command = "${pkgs.wl-clipboard}/bin/wl-copy";
+          actions-on-enter = [ "save-to-file" "save-to-clipboard" ];
+          actions-on-escape = [ "exit" ];
         };
-        Service = {
-          ExecStart = "${package}/bin/system-overlay";
-          Restart = "on-failure";
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
+        font.family = theme.fonts.sans.name;
       };
 
-      # the night light tile starts and stops the service; at login it starts only if the setting has it on
-      wlsunset.Service.ExecCondition = lib.mkIf config.nightLight.enable "${pkgs.writeShellScript "night-light-on" ''
-        value=$(${pkgs.jq}/bin/jq -r 'if has("nightLight") then .nightLight else empty end' ${cfg.overrides} 2>/dev/null)
-        [ "''${value:-${lib.boolToString cfg.settings.nightLight}}" = true ]
-      ''}";
+      systemd.user.services = {
+        system-overlay = {
+          Unit = {
+            Description = "System overlay";
+            PartOf = [ "graphical-session.target" ];
+            After = [ "graphical-session.target" ];
+          };
+          Service = {
+            ExecStart = "${package}/bin/system-overlay";
+            Restart = "on-failure";
+            # started once the tray's host is up: apps that check for a tray only when they start, like KeePassXC, are
+            # ordered after this
+            Type = "dbus";
+            BusName = "org.kde.StatusNotifierWatcher";
+          };
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
+
+        # the night light tile starts and stops the service; at login it starts only if the setting has it on
+        wlsunset.Service.ExecCondition = lib.mkIf config.nightLight.enable "${pkgs.writeShellScript "night-light-on" ''
+          value=$(${pkgs.jq}/bin/jq -r 'if has("nightLight") then .nightLight else empty end' ${cfg.overrides} 2>/dev/null)
+          [ "''${value:-${lib.boolToString cfg.settings.nightLight}}" = true ]
+        ''}";
+      };
     };
 
     services.upower = {

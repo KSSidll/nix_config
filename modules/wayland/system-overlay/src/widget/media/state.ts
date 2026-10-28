@@ -1,10 +1,6 @@
 import { createState } from "ags"
-import Gio from "gi://Gio"
-import GLib from "gi://GLib"
 import AstalMpris from "gi://AstalMpris"
-import { action, query, Window } from "../niri"
-
-Gio._promisify(Gio.DBusConnection.prototype, "call", "call_finish")
+import { action, windowOfBusName } from "../niri"
 
 const { PLAYING } = AstalMpris.PlaybackStatus
 
@@ -26,23 +22,9 @@ export function control(command: MediaCommand) {
   return true
 }
 
-// An app raising itself over MPRIS has no activation token, which niri can refuse; the player's window is found
-// through the process that owns its bus name instead.
 export async function focusPlayer(player: AstalMpris.Player) {
   try {
-    const reply = await Gio.DBus.session.call(
-      "org.freedesktop.DBus",
-      "/org/freedesktop/DBus",
-      "org.freedesktop.DBus",
-      "GetConnectionUnixProcessID",
-      new GLib.Variant("(s)", [player.busName]),
-      null,
-      Gio.DBusCallFlags.NONE,
-      -1,
-      null,
-    )
-    const [pid] = reply.deepUnpack() as [number]
-    const window = (await query<Window[]>("Windows")).find((it) => it.pid === pid)
+    const window = await windowOfBusName(player.busName)
     if (window) return action({ FocusWindow: { id: window.id } })
   } catch (error) {
     console.error(`Failed to find the window of a player [${player.busName}]: ${error}`)
